@@ -57,7 +57,7 @@ GAN生成的过程中遇到的”挫折“就是 `评价器”Discriminator“`�
 
 1. 首先初始化Generator和Discrimintor
 
-![1-3-1](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/1-3-1.jpg)
+    ![1-3-1](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/1-3-1.jpg)
 
 2. 固定住D, 先update G 目的是骗过D
 3. 然后固定住G，update D 目的是识别骗局
