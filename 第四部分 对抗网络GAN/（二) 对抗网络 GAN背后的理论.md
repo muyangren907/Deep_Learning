@@ -46,7 +46,7 @@ $$
 注：上式中，有半部分是一个固定的值，求最小值的时候，减去固定的值，对参数$\theta$ 的结果不影响。（目的是凑出KL距离公式）
 
 实际上划归为计算$P_{G}(x;\theta )$和$P_{data}(x)$KL距离最小值的问题：
-$$\arg\underset{\theta }{\min}KL(P_{data}||P_{G})$$
+$$\arg\underset{\theta }{\min}KL(P_{data}\parallel P_{G})$$
 
 ## 2. 生成器Generator
 
@@ -114,3 +114,32 @@ $$\underset {\color{blue} a}{P_{data}(x)}\underset {\color{blue} D}{\log D(x)}+\
 
 其中a,b 都是固定值，求最大值D，我们推导一下：
 
+![2-4-1](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-1.png)
+
+求出最优的$D^{*}$我们把它代回得到：
+
+![2-4-2](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-2.png)
+
+注明：其中最后的结果中有JS距离。和KL一样，JS距离也是衡量两种概率分布的工具。
+
+$$
+JSD(P\parallel Q)=\frac{1}{2}D(P\parallel M)+\frac{1}{2}D(Q\parallel M)\\
+M=\frac{1}{2}(P+Q)
+$$
+
+求解完D后我们再看下，最小化$\underset{D}{\max} V(G,D)$,是什么意思。我们假设存在三个G：G1,G2,G3, 每一个G都有一个$\underset{D}{\max} V(G,D)$
+
+![2-4-3](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-3.png)
+
+很显然，算法最终的结果是选择G3。
+
+### 4.2 算法过程
+
+![2-4-4](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-4.png)
+
+算法过程看起来比较简单，但是实际操作中遇到很多很问题。GAN是比较难以“驯服”的。
+
+实际操作：
+
+- 给定G，计算$\underset{D}{\max} V(G,D)$
+抽取sample $x_{1},x_{2},...,x_{m}\ from\ P_{data}(x)$，抽取sample $x_{1}^{'},x_{2}^{'},...,x_{m}^{'}\ from\ P_{G}(x)$，计算最大值。
