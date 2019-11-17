@@ -143,3 +143,37 @@ $$
 
 - 给定G，计算$\underset{D}{\max} V(G,D)$
 抽取sample $x_{1},x_{2},...,x_{m}\ from\ P_{data}(x)$，抽取sample $x_{1}^{'},x_{2}^{'},...,x_{m}^{'}\ from\ P_{G}(x)$，计算最大值。
+
+![2-4-5](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-5.png)
+
+D实际上是我们学过的最简单的二元分类器。
+
+![2-4-6](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-6.png)
+
+我们需要找到一个最好的D。
+
+- 给定D，找到能让$P_{data}(x)$和$P_{G}(x)$分布距离最小的G。
+
+整体算法过程：
+
+![2-4-7](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-7.png)
+
+注明：GAN的object 函数很难训练，刚开始的变化比较小。
+
+$$V=E_{x\sim P_{data}}[\log D(x)]+E_{x\sim P_{G}}[\log (1-D(x))]$$
+
+其中给定D的情况下，V的左半部分是固定值，我们可以不用考虑。
+
+![2-4-8](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-8.png)
+
+实操中：V可以写作
+
+$$V=E_{x\sim P_{G}}[-\log (D(x))]$$
+
+这样，函数图像变为：
+
+![2-4-9](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-9.png)
+
+这样的函数，就相对好train许多。
+
+本专栏图片、公式很多来自台湾大学李宏毅老师的深度学习课程,在这里，感谢这些经典课程，向李老师致敬！
