@@ -1,70 +1,179 @@
-# 对抗网络介绍 GAN Introduction
+# 对抗网络 GAN背后的理论
 
-## 1. 背景介绍
+对抗网络GAN是由生成器Generator最终生成图片、文本等结构化数据。
 
-对抗网络GAN的全称，Generative Adversarial Network (GAN) [1]是由机器学习大神，深度学习(花书)的作者lan J. Goodfellow在2014年提出。
+生成器能生成结构化数据的原理是什么呢？
 
-机器学习泰斗，CNN之父，在他的twitter中如此评价GAN：
-> 这是十年中，机器学习领域最伟大的算法之一。堪比于他自己在1990年提出的卷积神经网络。
-（评论内容来自：https://www.quora.com/What-are-some-recent-and-potentially-upcoming-breakthroughs-in-deep-learning）
-![1-1-1](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/1-1-1.png)
+简而言之：就是让生成器Generator找到目标图片、文本的信息的概率密度函数。通过概率密度函数 $P_{data}(x)$ 生成数据。
 
-- GAN 的种类
-    
-    目前已经有100多种GAN的变形。
-    ![1-1-2](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/1-1-2.png)
-    （参考https://github.com/hindupuravinash/the-gan-zoo）
-- GAN 的火爆程度
+![2-0-1](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-0-1.png)
 
-    GAN自从2104年提出后，就成了学术界和工业界的明星。我们从ICASSP 会议提交的论文就可以一看端倪。 GAN和强化学习，越来越受到大家的关注。
-    ![1-1-3](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/1-1-3.png)
+## 1. 最大似然估计近似
 
-## 2. GAN的基本想法
+任何复杂的问题都可以拆解为简单的问题。 在机器学习中最大似然估计就是基本问题。
 
-我们从基本的输入(向量)，通过由神经网络组成的生成器，生成结构化的高维数据。例如:图片, 句子
-![1-2-1](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/1-2-1.png)
+我们再对抗网络中使用最大似然估计：
 
-但是生成是目的，生成的过程非常曲折，就像人生一样，成功的过程一定要经历挫折。
+1. 我们首先获得目标数据的概率密度函数 $P_{data}(x)$
 
-GAN生成的过程中遇到的”挫折“就是 `评价器”Discriminator“`，Discriminator也是由神经网络实现的。
+2. 我们设定Generator的概率密度函数为 $P_{G}(x; \theta )$
 
-![1-2-2](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/1-2-2.png)
+- 找到 $\theta$能够让 $P_{G}(x;\theta)$越来越接近 $P_{data}(x)$
 
-生成器在生成的过程中被评价器矫正，评价器也是在不断进化，两者之间构成了相辅相成的对抗网络。
+- 举例： 假设$P\_{G}(x; \theta )$属于高斯分布，$\theta$ 就代表高斯分布的参数均值`mean`和方差`variance`。
 
-### 2.1 基本思路
+具体的做法是：
 
-我们举一个例子，枯叶蝶蝶和老鹰的故事。
+- 抽取sample $x_{1},x_{2},...,x_m\ from\ P_{data}(x)$
 
-枯叶蝶本是一只普通的蝴蝶。
-老鹰本是一只小鸟。
+- 计算最大似然函数 $$L = \prod_{i=1}^{m}P_{G}(x^{i};\theta )$$
 
-刚开始的时候，小鸟很容易发现蝴蝶的藏身之处，蝴蝶家族伤亡惨重。 蝴蝶家族紧急召开会议，讨论对策。他们在讨论中发现，是由于自己的服饰太过鲜艳，导致总是被小鸟发现。 于是乎，他们把服饰颜色低调处理了。发现蝴蝶的伤亡开始减少。
+目的是让似然函数的结果最大，我们就找到了 $\theta$
 
-小鸟家族慢慢发现，蝴蝶变少了，食物开始变得稀缺。小鸟家族召开紧急会议，会议经过讨论，发现蝴蝶是伪装了，小鸟需要升级自己发现蝴蝶的能力，于是他们升级到了大鸟。
+计算最大似然值可以推导如下：
+$$
+\begin{equation}\nonumber\\
+\begin{split}\\
+\theta ^{*}&=\arg\underset{\theta }{\max}\prod_{i=1}^{m}P_{G}(x^{i};\theta )\\
+&=\arg\underset{\theta }{\max}\log\prod_{i=1}^{m}P_{G}(x^{i};\theta )\\
+&=\arg\underset{\theta }{\max}\sum_{i=1}^{m}\log P_{G}(x^{i};\theta )\ \ \ \ \color{red} {\{x^{1},x^{2},...,x^{3}\}\ from\ P_{data}(x)}\\
+&\approx\arg\underset{\theta }{\max}E_{x\sim P_{data}}[\log P_{G}(x;\theta )]\\
+&=\arg\underset{\theta }{\max}\int_{x}^{ }P_{data}(x)\log P_{G}(x;\theta )\text{d}x-\int_{x}^{ }P_{data}(x)\log P_{data}(x)\text{d}x
+\end{split}
+\end{equation}
+$$
 
-故事又开始了循环，蝴蝶家族伤亡开始增加。他们开会决定将自己的衣服颜色变成树叶，这样，蝴蝶的伤亡就开始减少了。
+注：上式中，有半部分是一个固定的值，求最小值的时候，减去固定的值，对参数$\theta$ 的结果不影响。（目的是凑出KL距离公式）
 
-小鸟家族认识到问题的严重性，他们一直决定，进化成老鹰，不然无法存活。
-…
-自然界的进化就是这样周而复始。
+实际上划归为计算$P_{G}(x;\theta )$和$P_{data}(x)$KL距离最小值的问题：
+$$\arg\underset{\theta }{\min}KL(P_{data}\parallel P_{G})$$
 
-![1-2-3](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/1-2-3.png)
+## 2. 生成器Generator
 
-## 3 GAN的算法过程
+Generator G就是一个神经网络，它定义了生成器的$P_{G}(x;\theta )$
+G的目标是：找到$P_{G}(x;\theta )$和$P_{data}(x)$之间的最小差距
+![2-2-1](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-2-1.png)
 
-### 算法简单描述
+$$G^{*} = \arg \underset{G}{\min} \color{red}  { Div(P_{G},P_{data})}$$
 
-1. 首先初始化Generator和Discrimintor
+## 3. 鉴别器 Discriminator
 
-    ![1-3-1](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/1-3-1.jpg)
+鉴别器Discriminator D 就是需要鉴别那些数据是来自Generator G的$P_{G}(x;\theta )$，那些数据是来自真实数据$P_{data}(x)$
 
-2. 固定住D, 先update G 目的是骗过D
-3. 然后固定住G，update D 目的是识别骗局
-4. 返回2
+D的目标是：更可能的能区分真实数据和生成数据，做好一个质量检查员，而且还需要在工作中不断学习。
 
-本专栏图片、公式很多来自台湾大学李宏毅老师的深度学习课程，在这里，感谢这些经典课程，向李老师致敬！
+举例：
+我们有数据
+![2-3-1](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-3-1.png)
 
-## 参考资料 References
+鉴别器对于数据的鉴别难度，取决于数据的概率分布的差距：
 
-1. Ian Goodfellow et al. (2014). Generative Adversarial Networks.
+![2-3-2](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-3-2.png)
+
+用公式表示鉴别器的目标（G是固定的）：
+
+$$D^{*}=\arg \color{red} {\underset{D}{\max} V(D,G)}$$
+
+其中V的值（G是固定的）推导如下：
+$$
+\begin{equation}\nonumber\\
+\begin{split}\\
+V&=E_{x\sim P_{data}}[\log D(x)]+E_{x\sim P_{G}}[\log (1-D(x))]\\
+&=\int_{x}^{}P_{data}(x)\log D(x)\text{d}x+\int_{x}^{}P_{G}(x)\log (1-D(x))\text{d}x\\
+&=\int_{x}^{}[P_{data}(x)\log D(x)+P_{G}(x)\log (1-D(x))]\text{d}x\\
+&\color{blue} {Assume\ that\ D(x)\ can\ be\ any\ function}\\
+\end{split}
+\end{equation}
+$$
+
+我们需要找到一个最好的鉴别器D
+就是最大化：
+$$P_{data}(x)\log D(x)+P_{G}(x)\log (1-D(x))$$
+
+## 4. 算法的详细过程
+
+### 4.1 数学推导
+
+算法的核心是：
+
+$$G^{*} = \arg \underset{G}{\min} \color{red} {\underset{D}{\max}V(G,D)}$$
+
+这个公式看上去一头雾水，我们慢慢拆解它。
+首先，我们去看：
+
+$$D^{*}=\arg \color{red} {\underset{D}{\max} V(D,G)}$$
+
+我们需要挑出最好的鉴别器：让V最大。
+那么对于V我们知道：
+
+$$V=E_{x\sim P_{data}}[\log D(x)]+E_{x\sim P_{G}}[\log (1-D(x))]$$
+
+我们把它转换为求最大值的普通数学问题（大一或者高三知识就可以求解）
+
+$$\underset {\color{blue} a}{P_{data}(x)}\underset {\color{blue} D}{\log D(x)}+\underset {\color{blue} b}{P_{G}(x)}\underset {\color{blue} D}{\log (1-D(x))}$$
+
+其中a,b 都是固定值，求最大值D，我们推导一下：
+
+![2-4-1](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-1.png)
+
+求出最优的$D^{*}$我们把它代回得到：
+
+![2-4-2](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-2.png)
+
+注明：其中最后的结果中有JS距离。和KL一样，JS距离也是衡量两种概率分布的工具。
+
+$$
+JSD(P\parallel Q)=\frac{1}{2}D(P\parallel M)+\frac{1}{2}D(Q\parallel M)\\
+M=\frac{1}{2}(P+Q)
+$$
+
+求解完D后我们再看下，最小化$\underset{D}{\max} V(G,D)$,是什么意思。我们假设存在三个G：G1,G2,G3, 每一个G都有一个$\underset{D}{\max} V(G,D)$
+
+![2-4-3](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-3.png)
+
+很显然，算法最终的结果是选择G3。
+
+### 4.2 算法过程
+
+![2-4-4](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-4.png)
+
+算法过程看起来比较简单，但是实际操作中遇到很多很问题。GAN是比较难以“驯服”的。
+
+实际操作：
+
+- 给定G，计算$\underset{D}{\max} V(G,D)$
+抽取sample $x_{1},x_{2},...,x_{m}\ from\ P_{data}(x)$，抽取sample $x_{1}^{'},x_{2}^{'},...,x_{m}^{'}\ from\ P_{G}(x)$，计算最大值。
+
+![2-4-5](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-5.png)
+
+D实际上是我们学过的最简单的二元分类器。
+
+![2-4-6](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-6.png)
+
+我们需要找到一个最好的D。
+
+- 给定D，找到能让$P_{data}(x)$和$P_{G}(x)$分布距离最小的G。
+
+整体算法过程：
+
+![2-4-7](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-7.png)
+
+注明：GAN的object 函数很难训练，刚开始的变化比较小。
+
+$$V=E_{x\sim P_{data}}[\log D(x)]+E_{x\sim P_{G}}[\log (1-D(x))]$$
+
+其中给定D的情况下，V的左半部分是固定值，我们可以不用考虑。
+
+![2-4-8](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-8.png)
+
+实操中：V可以写作
+
+$$V=E_{x\sim P_{G}}[-\log (D(x))]$$
+
+这样，函数图像变为：
+
+![2-4-9](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-9.png)
+
+这样的函数，就相对好train许多。
+
+本专栏图片、公式很多来自台湾大学李宏毅老师的深度学习课程,在这里，感谢这些经典课程，向李老师致敬！
