@@ -6,7 +6,7 @@
 
 简而言之：就是让生成器Generator找到目标图片、文本的信息的概率密度函数。通过概率密度函数 $P_{data}(x)$ 生成数据。
 
-![2-0-1](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-0-1.png)
+![2-0-1](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-0-1.png)
 
 ## 1. 最大似然估计近似
 
@@ -52,7 +52,7 @@ $$\arg\underset{\theta }{\min}KL(P_{data}\parallel P_{G})$$
 
 Generator G就是一个神经网络，它定义了生成器的$P_{G}(x;\theta )$
 G的目标是：找到$P_{G}(x;\theta )$和$P_{data}(x)$之间的最小差距
-![2-2-1](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-2-1.png)
+![2-2-1](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-2-1.png)
 
 $$G^{*} = \arg \underset{G}{\min} \color{red}  { Div(P_{G},P_{data})}$$
 
@@ -64,11 +64,11 @@ D的目标是：更可能的能区分真实数据和生成数据，做好一个�
 
 举例：
 我们有数据
-![2-3-1](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-3-1.png)
+![2-3-1](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-3-1.png)
 
 鉴别器对于数据的鉴别难度，取决于数据的概率分布的差距：
 
-![2-3-2](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-3-2.png)
+![2-3-2](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-3-2.png)
 
 用公式表示鉴别器的目标（G是固定的）：
 
@@ -114,11 +114,11 @@ $$\underset {\color{blue} a}{P_{data}(x)}\underset {\color{blue} D}{\log D(x)}+\
 
 其中a,b 都是固定值，求最大值D，我们推导一下：
 
-![2-4-1](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-1.png)
+![2-4-1](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-1.png)
 
 求出最优的$D^{*}$我们把它代回得到：
 
-![2-4-2](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-2.png)
+![2-4-2](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-2.png)
 
 注明：其中最后的结果中有JS距离。和KL一样，JS距离也是衡量两种概率分布的工具。
 
@@ -129,13 +129,13 @@ $$
 
 求解完D后我们再看下，最小化$\underset{D}{\max} V(G,D)$,是什么意思。我们假设存在三个G：G1,G2,G3, 每一个G都有一个$\underset{D}{\max} V(G,D)$
 
-![2-4-3](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-3.png)
+![2-4-3](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-3.png)
 
 很显然，算法最终的结果是选择G3。
 
 ### 4.2 算法过程
 
-![2-4-4](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-4.png)
+![2-4-4](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-4.png)
 
 算法过程看起来比较简单，但是实际操作中遇到很多很问题。GAN是比较难以“驯服”的。
 
@@ -144,11 +144,11 @@ $$
 - 给定G，计算$\underset{D}{\max} V(G,D)$
 抽取sample $x_{1},x_{2},...,x_{m}\ from\ P_{data}(x)$，抽取sample $x_{1}^{'},x_{2}^{'},...,x_{m}^{'}\ from\ P_{G}(x)$，计算最大值。
 
-![2-4-5](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-5.png)
+![2-4-5](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-5.png)
 
 D实际上是我们学过的最简单的二元分类器。
 
-![2-4-6](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-6.png)
+![2-4-6](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-6.png)
 
 我们需要找到一个最好的D。
 
@@ -156,7 +156,7 @@ D实际上是我们学过的最简单的二元分类器。
 
 整体算法过程：
 
-![2-4-7](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-7.png)
+![2-4-7](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-7.png)
 
 注明：GAN的object 函数很难训练，刚开始的变化比较小。
 
@@ -164,7 +164,7 @@ $$V=E_{x\sim P_{data}}[\log D(x)]+E_{x\sim P_{G}}[\log (1-D(x))]$$
 
 其中给定D的情况下，V的左半部分是固定值，我们可以不用考虑。
 
-![2-4-8](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-8.png)
+![2-4-8](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-8.png)
 
 实操中：V可以写作
 
@@ -172,7 +172,7 @@ $$V=E_{x\sim P_{G}}[-\log (D(x))]$$
 
 这样，函数图像变为：
 
-![2-4-9](https://raw.githubusercontent.com/muyangren907/Deep_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-9.png)
+![2-4-9](https://raw.githubusercontent.com/muyangren907/Machine_Learning/master/%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%20%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9CGAN/images/2-4-9.png)
 
 这样的函数，就相对好train许多。
 
