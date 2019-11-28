@@ -47,7 +47,7 @@ Info GAN的架构刚开始可能让人感到一头雾水，我们慢慢拆开看
 
 具体的算法如下：
 
-- Initialize encoder En, decoder De,discriminator Dis
+- Initialize encoder En, decoder De, discriminator Dis
 - In each iteration:
 
     - Sample M images $x^1,x^2,\cdots ,x^M$ from database
